@@ -112,6 +112,7 @@ endif()
 set(JAVA_AWT_LIBRARY_DIRECTORIES)
 if(_JAVA_HOME)
   JAVA_APPEND_LIBRARY_DIRECTORIES(JAVA_AWT_LIBRARY_DIRECTORIES
+    ${_JAVA_HOME}/jre/bin
     ${_JAVA_HOME}/jre/lib/{libarch}
     ${_JAVA_HOME}/jre/lib
     ${_JAVA_HOME}/lib/{libarch}
@@ -199,7 +200,7 @@ foreach(JAVA_PROG "${JAVA_RUNTIME}" "${JAVA_COMPILE}" "${JAVA_ARCHIVE}")
     endif()
   endforeach()
   foreach(JAVA_LIB_PATH
-    ../lib ../jre/lib ../jre/lib/i386
+    ../lib ../jre/lib ../jre/bin ../jre/lib/i386
     ../java/lib ../java/jre/lib ../java/jre/lib/i386
     ../share/java/lib ../share/java/jre/lib ../share/java/jre/lib/i386)
     if(EXISTS ${jpath}/${JAVA_LIB_PATH})
