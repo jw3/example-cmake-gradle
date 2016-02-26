@@ -96,7 +96,7 @@ macro(java_append_library_directories _var)
     endforeach()
 endmacro()
 
-include(${CMAKE_CURRENT_LIST_DIR}/CMakeFindJavaCommon.cmake)
+include(${CMAKE_ROOT}/Modules/CMakeFindJavaCommon.cmake)
 
 # Save CMAKE_FIND_FRAMEWORK
 if(DEFINED CMAKE_FIND_FRAMEWORK)
@@ -283,7 +283,7 @@ else()
   unset(CMAKE_FIND_FRAMEWORK)
 endif()
 
-include(${CMAKE_CURRENT_LIST_DIR}/FindPackageHandleStandardArgs.cmake)
+include(${CMAKE_ROOT}/Modules/FindPackageHandleStandardArgs.cmake)
 FIND_PACKAGE_HANDLE_STANDARD_ARGS(JNI  DEFAULT_MSG  JAVA_AWT_LIBRARY JAVA_JVM_LIBRARY
                                                     JAVA_INCLUDE_PATH  JAVA_INCLUDE_PATH2 JAVA_AWT_INCLUDE_PATH)
 
