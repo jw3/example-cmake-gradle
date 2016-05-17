@@ -1,9 +1,11 @@
 cmake_minimum_required(VERSION 3.3)
 project(example_cmake)
 
+include(GenerateExportHeader)
+
 #
 # todo;; eventually this is specified externally
-set(ENV{JAVA_HOME} "C:\\Program Files\\Java\\jdk1.8.0_45")
+set(ENV{JAVA_HOME} "C:\\Program Files (x86)\\Java\\jdk1.8.0_73")
 
 #
 # we have a custom findjni to find the cross compile jre libs
@@ -36,6 +38,9 @@ set(ENV{JAVA_HOME} "C:\\Program Files\\Java\\jdk1.8.0_45")
 
 #
 # also on linux change the lib search
+#set(CMAKE_FIND_LIBRARY_PREFIXES "")
+set(CMAKE_FIND_LIBRARY_SUFFIXES ".lib")
+find_package(Java)
 
 find_package(JNI)
 if (JNI_FOUND)
@@ -43,7 +48,7 @@ if (JNI_FOUND)
     message(STATUS "JNI_LIBRARIES=${JNI_LIBRARIES}")
 endif ()
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -m32 -shared")
 
 set (_classes "${PROJECT_SOURCE_DIR}/build/classes/main")
 set (_jnih "${PROJECT_SOURCE_DIR}/build/jnih")
@@ -57,19 +62,22 @@ add_custom_command(
     -d ${_jnih}
     example.Example
 )
+set(CMAKE_SHARED_LINKER_FLAGS --enable-stdcall-fixup)
+
+add_library(example1 MODULE src/main/cpp/Example.cpp Example.h)
+target_include_directories(example1 PUBLIC ${JAVA_INCLUDE_PATH} ${JNI_INCLUDE_DIRS} ${_jnih})
+#linux set_target_properties(example PROPERTIES SUFFIX ".dll")
+
+MESSAGE(STATUS "${JNI_LIBRARIES}")
+
+target_link_libraries(example1 LINK_PUBLIC ${JNI_LIBRARIES})
 
 
-include_directories(${JAVA_INCLUDE_PATH} ${JNI_INCLUDE_DIRS} ${_jnih})
-add_library(example MODULE src/main/cpp/Example.cpp Example.h)
-set_target_properties(example PROPERTIES SUFFIX ".jnilib")
-target_link_libraries(example ${JNI_LIBRARIES})
 
-
-message(STATUS $ENV{PATH})
-
-
-SET(src
-    src/main/cpp/driver.cpp
-    )
-add_executable(untitled0 ${src})
-target_link_libraries(untitled0 ${JNI_LIBRARIES})
+#
+#SET(src
+#    src/main/cpp/driver.cpp
+#    )
+#add_executable(untitled0 ${src})
+#message(STATUS "${JNI_LIBRARIES}")
+#target_link_libraries(untitled0 ${JNI_LIBRARIES} ${JAVA_LIBRARIES})
